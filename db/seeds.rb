@@ -1,7 +1,15 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+VALENCES = ["great", "good", "decent", "ok", "meh", "not great", "bad", "terrible"]
+
+
+50.times do |n|
+  p = Post.create!({
+    :title => "Post number #{n}",
+    :body => "Today was a #{ VALENCES.sample } day"
+  })
+
+  3.times do
+    post.comments.build(:body => "This is a #{ VALENCES.sample } post")
+  end
+end
+
+
