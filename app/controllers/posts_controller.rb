@@ -17,12 +17,13 @@ class PostsController < ApplicationController
   end
 
   def index
-    @posts = Post.all
+    @posts = Post.includes(:comments)
+    p @posts
     respond_with @posts
   end
 
   def show
-    @post = Post.find(params[:id])
+    @post = Post.find(params[:id]).includes(:comments)
     respond_with @post
   end
 
