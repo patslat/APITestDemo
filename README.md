@@ -2,7 +2,7 @@
 
 First, we need to make sure we have rspec-rails installed.
 ```ruby
-group :development, :test => do
+group :development, :test do
   gem 'rspec-rails'
 end
 ```
