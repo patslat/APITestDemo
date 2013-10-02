@@ -1,5 +1,12 @@
 require 'spec_helper'
 
+FactoryGirl.define do
+  factory :post do
+    title "The cat is alive"
+    body "The cat is dead"
+  end
+end
+
 describe PostsController do
 
   describe "GET #index" do
