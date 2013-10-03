@@ -18,7 +18,6 @@ class PostsController < ApplicationController
 
   def index
     @posts = Post.includes(:comments)
-    p @posts
     respond_with @posts
   end
 
