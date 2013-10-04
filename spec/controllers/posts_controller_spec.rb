@@ -14,9 +14,7 @@ describe PostsController do
       post_with_comments = FactoryGirl.create(:post_with_comments)
       get :index, :format => 'json'
       expect(response).to be_success
-      body = JSON.parse(response.body)
-
-      comments = body['posts'].first['comments']
+      comments = json['posts'].first['comments']
       expect(comments.length).to eq(5)
     end
   end
@@ -32,8 +30,7 @@ describe PostsController do
       post_with_comments = FactoryGirl.create(:post_with_comments)
       get :show, :id => post_with_comments.id, :format => 'json'
       expect(response).to be_success
-      body = JSON.parse(response.body)
-      comments = body['posts'].first['comments']
+      comments = json['posts'].first['comments']
       expect(comments.length).to eq(5)
     end
   end
