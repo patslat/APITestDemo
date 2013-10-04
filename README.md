@@ -19,6 +19,29 @@ If you're serving any sort of associated data with your JSON API, you're either 
 
 ```
 
+
+You'll often be doing something like this in most specs:
+`json = JSON.parse(response.body)`
+
+We can dry this up by using a helper method:
+
+```ruby
+#spec/support/request_helpers.rb
+module Requests
+  module JsonHelpers
+    def json
+      @json ||= JSON.parse(response.body)
+    end
+  end
+end
+
+#include it in your config
+#spec/spec_helper.rb
+RSpec.configure do |config|
+  config.include Requests::JsonHelpers
+end
+```
+
 ##Making a request to your API
 So you're setting up your API and want to set up some test to make sure it is properly serving the JSON of the resources you want. We can begin by making simple requests and making sure that the response headers received are in the 200 range.
 
@@ -48,5 +71,8 @@ describe PostsController do
 end
 ```
 
+citations:
+[Rails API Testing Best Practices][testing-best-practices]
 
+[testing-best-practices]:http://matthewlehner.net/rails-api-testing-guidelines/
 [thoughtbot-serializer]:http://robots.thoughtbot.com/post/36676073713/better-serialization-less-as-json
