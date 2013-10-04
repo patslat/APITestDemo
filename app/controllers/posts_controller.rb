@@ -22,12 +22,13 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.find(params[:id]).includes(:comments)
+    @post = Post.where(id: params[:id]).includes(:comments)
     respond_with @post
   end
 
   def update
     @post = Post.find(params[:id])
+    p params
     if @post.update_attributes(params[:post])
       flash[:notice] = "Successfully created Post."
     end
