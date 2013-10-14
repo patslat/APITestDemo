@@ -1,6 +1,9 @@
 APITestDemo::Application.routes.draw do
-  resources :posts do
-    resources :comments, :only => [:create, :index, :new]
+  namespace :api do
+    namespace :v1 do
+      resources :posts do
+        resources :comments, :shallow => true
+      end
+    end
   end
-  resources :comments, :except => [:create, :index, :new]
 end

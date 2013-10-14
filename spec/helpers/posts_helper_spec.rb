@@ -10,6 +10,6 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe PostsHelper do
+describe Api::V1::PostsHelper do
   pending "add some examples to (or delete) #{__FILE__}"
 end

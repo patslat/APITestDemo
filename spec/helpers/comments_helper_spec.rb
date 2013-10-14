@@ -10,6 +10,6 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe CommentsHelper do
+describe Api::V1::CommentsHelper do
   pending "add some examples to (or delete) #{__FILE__}"
 end
