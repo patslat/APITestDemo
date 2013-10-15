@@ -3,35 +3,30 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     @post = Post.new(params[:post])
-    if @post.save
-      flash[:notice] = "Successfully created Post."
-    end
-    respond_with @post
+    @post.save
+    render :json => true, :status => :ok
   end
 
   def destroy
     @post = Post.find(params[:id])
-    @post.destroy # how do I handle destroys while using this pattern?
-    flash[:notice] = "Successfully destroyed Post."
-    respond_with @post
+    @post.destroy
+    render :json => true, :status => :ok
+    #respond_with @post
   end
 
   def index
-    @posts = Post.includes(:comments)
+    @posts = Post.all
     respond_with @posts
   end
 
   def show
-    @post = Post.where(id: params[:id]).includes(:comments)
+    @post = Post.where(id: params[:id])
     respond_with @post
   end
 
   def update
     @post = Post.find(params[:id])
-    p params
-    if @post.update_attributes(params[:post])
-      flash[:notice] = "Successfully created Post."
-    end
+    @post.update_attributes!(params[:post])
     respond_with @post
   end
 end
