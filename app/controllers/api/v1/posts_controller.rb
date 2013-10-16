@@ -3,15 +3,13 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     @post = Post.new(params[:post])
-    @post.save
-    render :json => true, :status => :ok
+    status = @post.save ? :ok : :unprocessable_entity
+    render :json => @post, :status => status
   end
 
   def destroy
     @post = Post.find(params[:id])
-    @post.destroy
-    render :json => true, :status => :ok
-    #respond_with @post
+    head (@post.destroy ? :no_content : :unprocessable_entity)
   end
 
   def index
@@ -26,7 +24,7 @@ class Api::V1::PostsController < ApplicationController
 
   def update
     @post = Post.find(params[:id])
-    @post.update_attributes!(params[:post])
+    @post.update_attributes(params[:post])
     respond_with @post
   end
 end

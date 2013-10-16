@@ -8,8 +8,9 @@ describe Api::V1::PostsController do
       post :create, :post => post_params, :format => 'json'
     end
 
-    it "responds successfully with an HTTP 200 status code" do
+    it "responds successfully with an HTTP 204 status code" do
       expect(response).to be_success
+      expect(response.status).to eq(200)
     end
 
     it "creates post" do
@@ -20,17 +21,20 @@ describe Api::V1::PostsController do
   end
 
   describe "DELETE #destroy" do
-    before :each do
-      single_post = FactoryGirl.create(:post)
-      delete :destroy, { :id => single_post.id }, :format => 'json'
-    end
+    let(:single_post) { FactoryGirl.create(:post) }
 
-    it "responds successfully with an HTTP 200 status code" do
-      expect(response).to eq(200)
+    it "responds successfully with an HTTP 204 status code" do
+      single_post
+      delete :destroy, :id => single_post
+      expect(response).to be_success
+      expect(response.status).to eq(204)
     end
 
     it "deletes post" do
-      expect(Post.count).to eq(0)
+      single_post
+      expect {
+        delete :destroy, :id => single_post
+      }.to change(Post, :count).by(-1)
     end
   end
 
@@ -61,6 +65,7 @@ describe Api::V1::PostsController do
 
     it "responds successfully with an HTTP 200 status code" do
       expect(response).to be_success
+      expect(response.status).to eq(200)
     end
 
     it "should include associated comments" do
@@ -85,8 +90,9 @@ describe Api::V1::PostsController do
           :format => 'json'
     end
 
-    it "responds successfully with an HTTP 200 status code" do
+    it "responds successfully with an HTTP 204 status code" do
       expect(response).to be_success
+      expect(response.status).to eq(204)
     end
   end
 
