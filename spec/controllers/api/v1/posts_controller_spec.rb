@@ -22,7 +22,7 @@ describe Api::V1::PostsController do
        expect(Post.count).to be(before_count + 1)
       end
     end
-    
+
     context "when unsuccessful" do
       before :each do
         post :create,
@@ -42,9 +42,7 @@ describe Api::V1::PostsController do
 
   describe "DELETE #destroy" do
     let(:single_post) { FactoryGirl.create(:post) }
-
     context 'when resource is found' do
-
       it "responds successfully with an HTTP 204 status code" do
         single_post
         delete :destroy, :id => single_post
@@ -52,25 +50,16 @@ describe Api::V1::PostsController do
         expect(response.status).to eq(204)
       end
 
-      it "deletes post" do
+      it "deletes the resource" do
         single_post
         expect {
           delete :destroy, :id => single_post
         }.to change(Post, :count).by(-1)
       end
     end
-
-    context 'when resource is not found' do
-      it 'responds with an HTTP 404 status code' do
-        delete :destroy, :id => 999
-        expect(response).to be_unprocessable
-        expect(response.status).to be(404)  
-      end
-    end
   end
 
   describe "GET #index" do
-
     before :each do
       post_with_comments = FactoryGirl.create(:post_with_comments)
       get :index, :format => 'json'
@@ -104,19 +93,9 @@ describe Api::V1::PostsController do
         expect(comments.length).to eq(5)
       end
     end
-
-    context "when unsuccessful" do
-      it  "responds with an HTTP 404" do
-        get :show, :id => 999, :format => 'json'
-        p response.status
-        expect(response).to be_failed
-        expect(response.status).to eq(422)
-      end
-    end
   end
 
   describe "PUT #update" do
-
     before :each do
       single_post = FactoryGirl.create(:post)
 
@@ -136,5 +115,4 @@ describe Api::V1::PostsController do
       expect(response.status).to eq(204)
     end
   end
-
 end
