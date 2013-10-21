@@ -3,8 +3,13 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     @post = Post.new(params[:post])
-    status = @post.save ? :ok : :unprocessable_entity
-    render :json => @post, :status => status
+    if @post.save
+      render :json => @post,
+             :status => :ok
+    else
+      render :json => @post.errors,
+             :status => :unprocessable_entity
+    end
   end
 
   def destroy
@@ -18,7 +23,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    @post = Post.where(id: params[:id])
+    @post = Post.find(params[:id])
     respond_with @post
   end
 

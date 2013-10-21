@@ -3,38 +3,69 @@ require 'spec_helper'
 describe Api::V1::PostsController do
 
   describe "POST #create" do
-    before :each do
-      post_params = FactoryGirl.attributes_for(:post)
-      post :create, :post => post_params, :format => 'json'
-    end
+    context "when successful" do
+      before :each do
+        post_params = FactoryGirl.attributes_for(:post)
+        post :create, :post => post_params, :format => 'json'
+      end
 
-    it "responds successfully with an HTTP 204 status code" do
-      expect(response).to be_success
-      expect(response.status).to eq(200)
-    end
+      it "responds successfully with an HTTP 204 status code" do
+        expect(response).to be_success
+        expect(response.status).to eq(200)
+      end
 
-    it "creates post" do
-     before_count = Post.count
-     post :create, :post => {:title => "hi", :body => 'hi'}, :format => 'json'
-     expect(Post.count).to be(before_count + 1)
+      it "creates post" do
+       before_count = Post.count
+       post :create,
+            :post => {:title => "hi", :body => 'hi'},
+            :format => 'json'
+       expect(Post.count).to be(before_count + 1)
+      end
+    end
+    
+    context "when unsuccessful" do
+      before :each do
+        post :create,
+             :post => { :title => '', :body => 'derp' },
+             :format => 'json'
+      end
+
+      it "responds with an HTTP 422 status code on failed create" do
+        post :create,
+             :post => { :title => '', :body => 'derp' },
+             :format => 'json'
+        expect(response).to be_unprocessable
+        expect(response.status).to be(422)
+      end
     end
   end
 
   describe "DELETE #destroy" do
     let(:single_post) { FactoryGirl.create(:post) }
 
-    it "responds successfully with an HTTP 204 status code" do
-      single_post
-      delete :destroy, :id => single_post
-      expect(response).to be_success
-      expect(response.status).to eq(204)
+    context 'when resource is found' do
+
+      it "responds successfully with an HTTP 204 status code" do
+        single_post
+        delete :destroy, :id => single_post
+        expect(response).to be_success
+        expect(response.status).to eq(204)
+      end
+
+      it "deletes post" do
+        single_post
+        expect {
+          delete :destroy, :id => single_post
+        }.to change(Post, :count).by(-1)
+      end
     end
 
-    it "deletes post" do
-      single_post
-      expect {
-        delete :destroy, :id => single_post
-      }.to change(Post, :count).by(-1)
+    context 'when resource is not found' do
+      it 'responds with an HTTP 404 status code' do
+        delete :destroy, :id => 999
+        expect(response).to be_unprocessable
+        expect(response.status).to be(404)  
+      end
     end
   end
 
@@ -57,20 +88,30 @@ describe Api::V1::PostsController do
   end
 
   describe "GET #show" do
+    context "when successful" do
+      before :each do
+        post_with_comments = FactoryGirl.create(:post_with_comments)
+        get :show, :id => post_with_comments.id, :format => 'json'
+      end
 
-    before :each do
-      post_with_comments = FactoryGirl.create(:post_with_comments)
-      get :show, :id => post_with_comments.id, :format => 'json'
+      it "responds successfully with an HTTP 200 status code" do
+        expect(response).to be_success
+        expect(response.status).to eq(200)
+      end
+
+      it "includes associated comments" do
+        comments = json['post']['comments']
+        expect(comments.length).to eq(5)
+      end
     end
 
-    it "responds successfully with an HTTP 200 status code" do
-      expect(response).to be_success
-      expect(response.status).to eq(200)
-    end
-
-    it "should include associated comments" do
-      comments = json['posts'].first['comments']
-      expect(comments.length).to eq(5)
+    context "when unsuccessful" do
+      it  "responds with an HTTP 404" do
+        get :show, :id => 999, :format => 'json'
+        p response.status
+        expect(response).to be_failed
+        expect(response.status).to eq(422)
+      end
     end
   end
 
