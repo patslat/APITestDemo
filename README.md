@@ -15,14 +15,8 @@ rails generate rspec:install
 
 Now we have a spec directory, yay!
 
-##Testing `#as_json`
-If you're serving any sort of associated data with your JSON API, you're either overwriting `#as_json` in your model, using RABL, or using [ActiveModel::Serializer][thoughtbot-serializer]. This can easily be tested in your `model_spec.rb` file. Let's see how we can do that
-
-```ruby
-#spec/models/post_spec.rb
-
-```
-
+##Nested Resources
+If you're serving any sort of associated data with your JSON API, you're either overwriting `#as_json` in your model, using RABL, or using [ActiveModel::Serializer][thoughtbot-serializer]. You probably want to make sure that this is working properly, so make sure that the response arrives with the nested resource details intact.
 
 You'll often be doing something like this in most specs:
 `json = JSON.parse(response.body)`
